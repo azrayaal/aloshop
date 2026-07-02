@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import {
   GridIcon,
   HomeIcon,
-  QrIcon,
   ReceiptIcon,
   UserIcon,
   type IconProps,

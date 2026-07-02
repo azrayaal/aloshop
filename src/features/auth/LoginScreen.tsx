@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Logo } from '@/components/atoms/Logo'
+// import { Logo } from '@/components/atoms/Logo'
 import { Button } from '@/components/ui/Button'
 import { ChevronLeftIcon, GiftIcon, ShieldIcon, TruckIcon } from '@/components/icons'
 import { useAuth } from '@/context/AuthContext'
