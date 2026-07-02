@@ -1,5 +1,44 @@
 /** Domain types shared across the storefront. */
 
+export type PaymentMethod = 'qris' | 'va'
+
+export type OrderStatus = 'awaiting_payment' | 'processing' | 'shipped' | 'delivered'
+
+export interface OrderItem {
+  id: string
+  name: string
+  glyph: string
+  image?: string
+  price: number
+  qty: number
+}
+
+export interface TrackingStep {
+  key: string
+  label: string
+  description: string
+  time: string
+  done: boolean
+}
+
+export interface Order {
+  id: string
+  items: OrderItem[]
+  subtotal: number
+  shippingFee: number
+  total: number
+  paymentMethod: PaymentMethod
+  /** Bank name for VA payments. */
+  bank?: string
+  /** Virtual-account number for VA payments. */
+  vaNumber?: string
+  status: OrderStatus
+  createdAt: string
+  address: string
+  courier: string
+  tracking: TrackingStep[]
+}
+
 export interface QuickAction {
   id: string
   label: string
@@ -13,6 +52,7 @@ export interface FlashDeal {
   id: string
   name: string
   glyph: string
+  image?: string
   gradient: string
   price: number
   originalPrice: number
@@ -27,12 +67,21 @@ export interface Product {
   id: string
   name: string
   glyph: string
+  image?: string
   gradient: string
   price: number
   originalPrice?: number
   discountPct?: number
   rating: number
   favorite?: boolean
+  /** Category id used by the catalog / category page. */
+  category?: string
+}
+
+export interface Category {
+  id: string
+  label: string
+  glyph: string
 }
 
 export interface StoreInfo {

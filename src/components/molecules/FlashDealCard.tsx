@@ -2,14 +2,16 @@ import { Badge } from '@/components/atoms/Badge'
 import { Price } from '@/components/atoms/Price'
 import { ProgressBar } from '@/components/atoms/ProgressBar'
 import { Thumbnail } from '@/components/atoms/Thumbnail'
+import { PlusIcon } from '@/components/icons'
 import type { FlashDeal } from '@/types'
 
 interface FlashDealCardProps {
   deal: FlashDeal
+  onAdd?: () => void
 }
 
 /** Horizontal-carousel card for a time-limited flash deal. */
-export function FlashDealCard({ deal }: FlashDealCardProps) {
+export function FlashDealCard({ deal, onAdd }: FlashDealCardProps) {
   const isLowStock = deal.stockLeft != null
   const progress = isLowStock
     ? deal.stockLeft! / deal.stockTotal
@@ -19,7 +21,13 @@ export function FlashDealCard({ deal }: FlashDealCardProps) {
   return (
     <article className="flex w-40 shrink-0 flex-col overflow-hidden rounded-card bg-white shadow-card">
       <div className="relative">
-        <Thumbnail glyph={deal.glyph} gradient={deal.gradient} className="aspect-[4/3] w-full" />
+        <Thumbnail
+          src={deal.image}
+          alt={deal.name}
+          glyph={deal.glyph}
+          gradient={deal.gradient}
+          className="aspect-[4/3] w-full"
+        />
         <Badge tone="discount" className="absolute left-0 top-2 rounded-l-none rounded-r-md">
           -{deal.discountPct}%
         </Badge>
@@ -28,7 +36,19 @@ export function FlashDealCard({ deal }: FlashDealCardProps) {
         <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-snug text-ink">
           {deal.name}
         </h3>
-        <Price amount={deal.price} original={deal.originalPrice} size="sm" />
+        <div className="flex items-end justify-between">
+          <Price amount={deal.price} original={deal.originalPrice} size="sm" />
+          {onAdd && (
+            <button
+              type="button"
+              aria-label={`Tambah ${deal.name} ke keranjang`}
+              onClick={onAdd}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-white shadow-soft transition active:scale-90"
+            >
+              <PlusIcon className="h-4 w-4" />
+            </button>
+          )}
+        </div>
         <div className="mt-1 space-y-1">
           <ProgressBar
             value={progress}

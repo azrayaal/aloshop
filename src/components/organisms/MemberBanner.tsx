@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { CloseIcon, PinIcon } from '@/components/icons'
 
+interface MemberBannerProps {
+  onRegister?: () => void
+}
+
 /** Dismissible "become a member" call-to-action above the tab bar. */
-export function MemberBanner() {
+export function MemberBanner({ onRegister }: MemberBannerProps) {
   const [dismissed, setDismissed] = useState(false)
   if (dismissed) return null
 
@@ -17,6 +21,7 @@ export function MemberBanner() {
       </div>
       <button
         type="button"
+        onClick={onRegister}
         className="shrink-0 rounded-full bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-soft transition active:scale-95"
       >
         Daftar Gratis

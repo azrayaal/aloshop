@@ -19,7 +19,13 @@ export function ProductCard({ product, onAdd }: ProductCardProps) {
   return (
     <article className="flex flex-col overflow-hidden rounded-card bg-white shadow-card">
       <div className="relative">
-        <Thumbnail glyph={product.glyph} gradient={product.gradient} className="aspect-square w-full" />
+        <Thumbnail
+          src={product.image}
+          alt={product.name}
+          glyph={product.glyph}
+          gradient={product.gradient}
+          className="aspect-square w-full"
+        />
         {product.discountPct != null && (
           <Badge tone="success" className="absolute left-2 top-2">
             Diskon {product.discountPct}%

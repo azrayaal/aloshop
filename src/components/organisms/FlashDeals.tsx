@@ -6,10 +6,11 @@ import type { FlashDeal } from '@/types'
 interface FlashDealsProps {
   deals: FlashDeal[]
   countdownSeconds: number
+  onAdd?: (deal: FlashDeal) => void
 }
 
 /** Flash-deal section: countdown header + horizontally scrolling cards. */
-export function FlashDeals({ deals, countdownSeconds }: FlashDealsProps) {
+export function FlashDeals({ deals, countdownSeconds, onAdd }: FlashDealsProps) {
   return (
     <section className="space-y-3">
       <SectionHeader
@@ -19,7 +20,7 @@ export function FlashDeals({ deals, countdownSeconds }: FlashDealsProps) {
       />
       <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
         {deals.map((deal) => (
-          <FlashDealCard key={deal.id} deal={deal} />
+          <FlashDealCard key={deal.id} deal={deal} onAdd={onAdd ? () => onAdd(deal) : undefined} />
         ))}
       </div>
     </section>
