@@ -1,6 +1,6 @@
 import { BellIcon, CartIcon } from '@/components/icons'
 import { IconButton } from '@/components/atoms/IconButton'
-import { Logo } from '@/components/atoms/Logo'
+// import { Logo } from '@/components/atoms/Logo'
 import { LocationBar } from '@/components/molecules/LocationBar'
 import { SearchBar } from '@/components/molecules/SearchBar'
 
@@ -16,7 +16,8 @@ export function AppHeader({ address, cartCount = 0, notificationCount = 0, onCar
   return (
     <header className="sticky top-0 z-20 space-y-3 bg-surface px-4 pb-3 pt-4 shadow-soft">
       <div className="flex items-center justify-between">
-        <Logo />
+        {/* <Logo /> */}
+        <img src="/iconaloshop.png" className='h-10' alt="" />
         <div className="flex items-center">
           <IconButton label="Notifikasi" badge={notificationCount}>
             <BellIcon className="h-6 w-6" />

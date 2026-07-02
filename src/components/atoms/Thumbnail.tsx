@@ -18,13 +18,12 @@ interface ThumbnailProps {
  */
 export function Thumbnail({ src, alt = '', glyph, gradient = 'from-slate-100 to-slate-200', className }: ThumbnailProps) {
   if (src) {
+    // The sizing className is applied to a wrapper so the <img> can safely fill
+    // it (avoids h-full/h-20 utility conflicts) and rounded corners get clipped.
     return (
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        className={cn('h-full w-full bg-surface-sunken object-cover', className)}
-      />
+      <div className={cn('overflow-hidden bg-surface-sunken', className)}>
+        <img src={src} alt={alt} loading="lazy" className="h-full w-full object-cover" />
+      </div>
     )
   }
   return (

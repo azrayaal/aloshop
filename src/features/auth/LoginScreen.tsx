@@ -35,7 +35,7 @@ export function LoginScreen() {
           <ChevronLeftIcon className="h-6 w-6" />
         </button>
         <div className="mt-6">
-          <Logo className="[&_span]:text-white [&_.text-brand-600]:text-brand-200" />
+          <img src="/iconaloshop.png" className='h-10' alt="" />
           <h1 className="mt-4 text-2xl font-extrabold leading-tight">Masuk untuk mulai belanja</h1>
           <p className="mt-1 text-sm text-white/80">Nikmati gratis ongkir, poin, dan promo eksklusif.</p>
         </div>
@@ -45,7 +45,7 @@ export function LoginScreen() {
       <form onSubmit={handleSubmit} className="-mt-6 flex-1 space-y-5 rounded-t-[1.75rem] bg-surface p-5">
         <div className="space-y-4">
           <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-ink">Email atau No. HP</span>
+            <span className="mb-1.5 block pt-10 text-sm font-medium text-ink">Email atau No. HP</span>
             <input
               type="text"
               value={email}

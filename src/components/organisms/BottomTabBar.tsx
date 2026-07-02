@@ -58,12 +58,13 @@ export function BottomTabBar() {
       <button
         type="button"
         onClick={() => navigate('/alopay')}
-        className="absolute -top-5 left-1/2 flex -translate-x-1/2 flex-col items-center"
+        className="absolute -top-10 left-1/2 flex -translate-x-1/2 flex-col items-center"
       >
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg ring-4 ring-white">
+        {/* <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-600 text-white shadow-lg ring-4 ring-white">
           <QrIcon className="h-7 w-7" />
         </span>
-        <span className="mt-0.5 text-[11px] font-semibold text-brand-600">AloPay</span>
+        <span className="mt-0.5 text-[11px] font-semibold text-brand-600">AloPay</span> */}
+        <img src="/AloPay.png" className='h-24' alt="" />
       </button>
     </nav>
   )

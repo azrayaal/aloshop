@@ -5,7 +5,6 @@ import { MemberBanner } from '@/components/organisms/MemberBanner'
 import { ProductGrid } from '@/components/organisms/ProductGrid'
 import { PromoBanner } from '@/components/organisms/PromoBanner'
 import { QuickActions } from '@/components/organisms/QuickActions'
-import { RewardsCard } from '@/components/organisms/RewardsCard'
 import { StoreCard } from '@/components/molecules/StoreCard'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
@@ -14,7 +13,6 @@ import {
   flashDeals,
   products,
   quickActions,
-  rewards,
   store,
 } from '@/data/home'
 import type { FlashDeal, Product } from '@/types'
@@ -54,7 +52,8 @@ export function HomeScreen() {
       />
 
       <main className="no-scrollbar flex-1 space-y-6 overflow-y-auto px-4 pb-24 pt-4">
-        <RewardsCard rewards={rewards} />
+        {/* <RewardsCard rewards={rewards} /> */}
+        <img src="/loyalty.png" alt="Aloshop Rewards — 1.250 pts, Gold Member" className="w-full" />
         <QuickActions actions={quickActions} onSelect={() => navigate('/category')} />
         <StoreCard store={store} />
         <FlashDeals deals={flashDeals} countdownSeconds={flashDealCountdownSeconds} onAdd={handleAddDeal} />

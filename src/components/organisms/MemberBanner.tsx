@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CloseIcon, PinIcon } from '@/components/icons'
+import { CloseIcon, } from '@/components/icons'
 
 interface MemberBannerProps {
   onRegister?: () => void
@@ -11,9 +11,9 @@ export function MemberBanner({ onRegister }: MemberBannerProps) {
   if (dismissed) return null
 
   return (
-    <section className="flex items-center gap-3 rounded-2xl border border-brand-100 bg-brand-50/60 p-3">
+    <section className="flex items-center gap-3 rounded-2xl border border-green-300 bg-[#F0F3FF] p-3">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-brand-600 shadow-soft">
-        <PinIcon className="h-5 w-5" />
+        <img src="/member.png" className='h-5' alt="" />
       </span>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-bold text-ink">Yuk, jadi member!</p>
@@ -22,7 +22,7 @@ export function MemberBanner({ onRegister }: MemberBannerProps) {
       <button
         type="button"
         onClick={onRegister}
-        className="shrink-0 rounded-full bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-soft transition active:scale-95"
+        className="shrink-0 rounded-xl bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-soft transition active:scale-95"
       >
         Daftar Gratis
       </button>

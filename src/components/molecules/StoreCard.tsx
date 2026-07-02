@@ -11,9 +11,10 @@ interface StoreCardProps {
 export function StoreCard({ store, className }: StoreCardProps) {
   return (
     <div className={cn('flex items-center gap-3 rounded-2xl bg-white p-3 shadow-soft', className)}>
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+      {/* <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
         🏬
-      </span>
+      </span> */}
+      <img src="/store.png" className='h-10' alt="" />
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-ink">
           {store.name} <span className="font-normal text-ink-muted">• {store.distanceKm} km</span>
