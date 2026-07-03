@@ -5,12 +5,12 @@ function paymentLabel(order: Order): string {
   return order.paymentMethod === 'qris' ? 'QRIS / AloPay' : `${order.bank ?? ''} Virtual Account`.trim()
 }
 
-const statusText: Record<Order['status'], string> = {
-  awaiting_payment: 'Menunggu Pembayaran',
-  processing: 'Diproses',
-  shipped: 'Dikirim',
-  delivered: 'Selesai',
-}
+// const statusText: Record<Order['status'], string> = {
+//   awaiting_payment: 'Menunggu Pembayaran',
+//   processing: 'Diproses',
+//   shipped: 'Dikirim',
+//   delivered: 'Selesai',
+// }
 
 /** Numeric-only code shown on the barcode (matches Barcode.tsx). */
 function barcodeValue(order: Order): string {
