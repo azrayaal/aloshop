@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { CartLine } from '@/context/CartContext'
-import type { Order, OrderStatus, PaymentMethod, TrackingStep } from '@/types'
+import type { Order, OrderCustomer, OrderStatus, PaymentMethod, TrackingStep } from '@/types'
 
 interface CreateOrderInput {
   lines: CartLine[]
@@ -9,6 +9,7 @@ interface CreateOrderInput {
   paymentMethod: PaymentMethod
   bank?: string
   address: string
+  customer?: OrderCustomer
 }
 
 interface OrdersContextValue {
@@ -93,6 +94,7 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
       createdAt: time(now),
       address: input.address,
       courier: 'Gojek Instant',
+      customer: input.customer,
       tracking: buildTracking(now, false),
     }
     setOrders((prev) => [order, ...prev])

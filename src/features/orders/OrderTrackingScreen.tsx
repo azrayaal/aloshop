@@ -3,27 +3,32 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { SubHeader } from '@/components/ui/SubHeader'
 import { Button } from '@/components/ui/Button'
 import { Barcode } from '@/components/ui/Barcode'
-import { BarcodeIcon, CheckIcon, DownloadIcon, PinIcon, TruckIcon } from '@/components/icons'
+import { BarcodeIcon, CheckIcon, DownloadIcon, PinIcon, TruckIcon, UserIcon } from '@/components/icons'
 import { ProductImage } from '@/components/atoms/Thumbnail'
+import { useAuth } from '@/context/AuthContext'
 import { useOrders } from '@/context/OrdersContext'
 import { formatIDR } from '@/lib/format'
 import { cn } from '@/lib/cn'
-import { orderStatusMeta } from '@/features/orders/orderStatus'
 import { downloadOrderReceipt } from '@/lib/orderReceipt'
 
 /** Order detail with a step-by-step delivery tracking timeline. */
 export function OrderTrackingScreen() {
   const { orderId } = useParams()
   const { getOrder } = useOrders()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [showBarcode, setShowBarcode] = useState(false)
 
   const order = orderId ? getOrder(orderId) : undefined
   if (!order) return <Navigate to="/orders" replace />
 
-  const meta = orderStatusMeta[order.status]
   const paymentLabel =
     order.paymentMethod === 'qris' ? 'QRIS / AloPay' : `${order.bank} Virtual Account`
+
+  // Prefer the order's stored buyer; fall back to the current account for older orders.
+  const customer =
+    order.customer ?? (user ? { name: user.name, email: user.email, phone: user.phone } : undefined)
+  const orderForDownload = { ...order, customer }
 
   return (
     <div className="flex h-full flex-col bg-surface-subtle">
@@ -34,7 +39,7 @@ export function OrderTrackingScreen() {
           <button
             type="button"
             aria-label="Unduh pesanan"
-            onClick={() => downloadOrderReceipt(order)}
+            onClick={() => downloadOrderReceipt(orderForDownload)}
             className="flex h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-surface-sunken"
           >
             <DownloadIcon className="h-5 w-5" />
@@ -49,8 +54,8 @@ export function OrderTrackingScreen() {
             <TruckIcon className="h-6 w-6" />
           </span>
           <div>
-            <p className="text-sm text-white/80">Order {order.id}</p>
-            <p className="text-lg font-bold">{meta.label}</p>
+            <p className="text-sm font-bold text-white/80">Order {order.id}</p>
+            {/* <p className="text-lg font-bold">{meta.label}</p> */}
           </div>
           <span className="ml-auto text-right text-xs text-white/80">
             Kurir
@@ -65,7 +70,75 @@ export function OrderTrackingScreen() {
           </Button>
         )}
 
-        {/* Timeline */}
+    
+        {/* Customer / orderer */}
+        {customer && (
+          <section className="rounded-card bg-white p-4 shadow-soft">
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+                <UserIcon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-ink">Data Pemesan</p>
+                <p className="mt-0.5 truncate text-sm text-ink-soft">{customer.name}</p>
+                {customer.phone && <p className="text-xs text-ink-muted">{customer.phone}</p>}
+                {customer.email && <p className="truncate text-xs text-ink-muted">{customer.email}</p>}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Address */}
+        <section className="rounded-card bg-white p-4 shadow-soft">
+          <div className="flex items-start gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+              <PinIcon className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-ink">Alamat Pengiriman</p>
+              <p className="mt-0.5 text-sm text-ink-soft">{order.address}</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Items */}
+        <section className="rounded-card bg-white p-4 shadow-soft">
+          <h2 className="mb-3 text-sm font-bold text-ink">Detail Pesanan</h2>
+          <ul className="space-y-3">
+            {order.items.map((it) => (
+              <li key={it.id} className="flex items-center gap-3">
+                <ProductImage src={it.image} glyph={it.glyph} alt={it.name} className="h-10 w-10" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-ink">{it.name}</p>
+                  <p className="text-xs text-ink-muted">
+                    {it.qty} × {formatIDR(it.price)}
+                  </p>
+                </div>
+                <span className="text-sm font-semibold text-ink">{formatIDR(it.price * it.qty)}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4 space-y-2 border-t border-slate-100 pt-3 text-sm">
+            <div className="flex justify-between">
+              <span className="text-ink-soft">Metode Pembayaran</span>
+              <span className="font-medium text-ink">{paymentLabel}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-ink-soft">Subtotal</span>
+              <span className="font-medium text-ink">{formatIDR(order.subtotal)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-ink-soft">Ongkir</span>
+              <span className="font-medium text-ink">{formatIDR(order.shippingFee)}</span>
+            </div>
+            <div className="flex justify-between border-t border-slate-100 pt-2">
+              <span className="font-bold text-ink">Total</span>
+              <span className="font-extrabold text-brand-700">{formatIDR(order.total)}</span>
+            </div>
+          </div>
+        </section>
+
+          {/* Timeline */}
         <section className="rounded-card bg-white p-4 shadow-soft">
           <h2 className="mb-4 text-sm font-bold text-ink">Status Pengiriman</h2>
           <ol>
@@ -127,61 +200,12 @@ export function OrderTrackingScreen() {
           </ol>
         </section>
 
-        {/* Address */}
-        <section className="rounded-card bg-white p-4 shadow-soft">
-          <div className="flex items-start gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
-              <PinIcon className="h-5 w-5" />
-            </span>
-            <div>
-              <p className="text-sm font-bold text-ink">Alamat Pengiriman</p>
-              <p className="mt-0.5 text-sm text-ink-soft">{order.address}</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Items */}
-        <section className="rounded-card bg-white p-4 shadow-soft">
-          <h2 className="mb-3 text-sm font-bold text-ink">Detail Pesanan</h2>
-          <ul className="space-y-3">
-            {order.items.map((it) => (
-              <li key={it.id} className="flex items-center gap-3">
-                <ProductImage src={it.image} glyph={it.glyph} alt={it.name} className="h-10 w-10" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-ink">{it.name}</p>
-                  <p className="text-xs text-ink-muted">
-                    {it.qty} × {formatIDR(it.price)}
-                  </p>
-                </div>
-                <span className="text-sm font-semibold text-ink">{formatIDR(it.price * it.qty)}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4 space-y-2 border-t border-slate-100 pt-3 text-sm">
-            <div className="flex justify-between">
-              <span className="text-ink-soft">Metode Pembayaran</span>
-              <span className="font-medium text-ink">{paymentLabel}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-ink-soft">Subtotal</span>
-              <span className="font-medium text-ink">{formatIDR(order.subtotal)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-ink-soft">Ongkir</span>
-              <span className="font-medium text-ink">{formatIDR(order.shippingFee)}</span>
-            </div>
-            <div className="flex justify-between border-t border-slate-100 pt-2">
-              <span className="font-bold text-ink">Total</span>
-              <span className="font-extrabold text-brand-700">{formatIDR(order.total)}</span>
-            </div>
-          </div>
-        </section>
 
         <Button
           fullWidth
           variant="secondary"
           icon={<DownloadIcon className="h-5 w-5" />}
-          onClick={() => downloadOrderReceipt(order)}
+          onClick={() => downloadOrderReceipt(orderForDownload)}
         >
           Unduh Pesanan (PDF)
         </Button>

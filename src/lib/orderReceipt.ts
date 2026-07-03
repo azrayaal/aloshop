@@ -186,12 +186,14 @@ export function buildOrderPdf(order: Order): Blob {
   page.y = PAGE_H - bandH - 26
 
   // ---- Order info ----
-  const info: [string, string][] = [
-    ['Tanggal', order.createdAt],
-    ['Kurir', order.courier],
-    ['Alamat', order.address],
-    ['Metode Bayar', paymentLabel(order)],
-  ]
+  const info: [string, string][] = []
+  if (order.customer?.name) info.push(['Pemesan', order.customer.name])
+  if (order.customer?.phone) info.push(['Telepon', order.customer.phone])
+  if (order.customer?.email) info.push(['Email', order.customer.email])
+  info.push(['Tanggal', order.createdAt])
+  info.push(['Kurir', order.courier])
+  info.push(['Alamat', order.address])
+  info.push(['Metode Bayar', paymentLabel(order)])
   if (order.vaNumber) info.push(['No. VA', order.vaNumber])
   info.forEach(([k, v]) => {
     ensure(17)

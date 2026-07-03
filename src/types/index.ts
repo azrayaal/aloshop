@@ -21,6 +21,12 @@ export interface TrackingStep {
   done: boolean
 }
 
+export interface OrderCustomer {
+  name: string
+  email?: string
+  phone?: string
+}
+
 export interface Order {
   id: string
   items: OrderItem[]
@@ -36,6 +42,8 @@ export interface Order {
   createdAt: string
   address: string
   courier: string
+  /** Buyer / account details for the order. */
+  customer?: OrderCustomer
   tracking: TrackingStep[]
 }
 

@@ -4,6 +4,7 @@ import { SubHeader } from '@/components/ui/SubHeader'
 import { Button } from '@/components/ui/Button'
 import { CheckIcon, PinIcon } from '@/components/icons'
 import { ProductImage } from '@/components/atoms/Thumbnail'
+import { useAuth } from '@/context/AuthContext'
 import { useCart } from '@/context/CartContext'
 import { useOrders } from '@/context/OrdersContext'
 import { formatIDR } from '@/lib/format'
@@ -14,6 +15,7 @@ import { cn } from '@/lib/cn'
 export function CheckoutScreen() {
   const { lines, subtotal, count } = useCart()
   const { createOrder } = useOrders()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [selected, setSelected] = useState(paymentOptions[0].id)
 
@@ -31,6 +33,7 @@ export function CheckoutScreen() {
       paymentMethod: option.method,
       bank: option.bank,
       address: DEFAULT_ADDRESS,
+      customer: user ? { name: user.name, email: user.email, phone: user.phone } : undefined,
     })
     navigate(`/payment/${order.id}`, { replace: true })
   }
