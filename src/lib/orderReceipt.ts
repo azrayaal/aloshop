@@ -182,7 +182,7 @@ export function buildOrderPdf(order: Order): Blob {
   page.text('AloShop', { font: 'F2', size: 26, color: WHITE, x: MARGIN, y: PAGE_H - 46 })
   page.text('Struk Pesanan', { size: 11, color: [0.85, 0.96, 0.91], x: MARGIN, y: PAGE_H - 64 })
   page.textRight(order.id, right, { size: 13, color: WHITE, y: PAGE_H - 44 })
-  page.textRight(statusText[order.status], right, { size: 10, color: [0.85, 0.96, 0.91], y: PAGE_H - 62 })
+  // page.textRight(statusText[order.status], right, { size: 10, color: [0.85, 0.96, 0.91], y: PAGE_H - 62 })
   page.y = PAGE_H - bandH - 26
 
   // ---- Order info ----
@@ -246,22 +246,22 @@ export function buildOrderPdf(order: Order): Blob {
   page.y = boxTop - boxH - 6
 
   // ---- Tracking timeline ----
-  sectionTitle('Status Pengiriman')
-  const blockH = 34
-  const dotX = MARGIN + 6
-  order.tracking.forEach((s, i) => {
-    ensure(blockH)
-    const dotY = page.y - 4
-    const isLast = i === order.tracking.length - 1
-    if (!isLast) page.rect(dotX - 0.8, dotY - blockH, 1.6, blockH, s.done ? GREEN : LINE)
-    page.circle(dotX, dotY, 5, s.done ? GREEN : MUTED)
-    if (s.done) page.circle(dotX, dotY, 1.8, WHITE)
-    page.text(s.label, { x: MARGIN + 22, size: 10.5, font: 'F2', color: s.done ? INK : SOFT })
-    page.textRight(s.time, right, { size: 9, color: MUTED, y: page.y })
-    page.y -= 13
-    page.text(s.description, { x: MARGIN + 22, size: 9, color: MUTED })
-    page.y -= blockH - 13
-  })
+  // sectionTitle('Status Pengiriman')
+  // const blockH = 34
+  // const dotX = MARGIN + 6
+  // order.tracking.forEach((s, i) => {
+  //   ensure(blockH)
+  //   const dotY = page.y - 4
+  //   const isLast = i === order.tracking.length - 1
+  //   if (!isLast) page.rect(dotX - 0.8, dotY - blockH, 1.6, blockH, s.done ? GREEN : LINE)
+  //   page.circle(dotX, dotY, 5, s.done ? GREEN : MUTED)
+  //   if (s.done) page.circle(dotX, dotY, 1.8, WHITE)
+  //   page.text(s.label, { x: MARGIN + 22, size: 10.5, font: 'F2', color: s.done ? INK : SOFT })
+  //   page.textRight(s.time, right, { size: 9, color: MUTED, y: page.y })
+  //   page.y -= 13
+  //   page.text(s.description, { x: MARGIN + 22, size: 9, color: MUTED })
+  //   page.y -= blockH - 13
+  // })
 
   // ---- Footer ----
   page.y -= 6
