@@ -1,18 +1,22 @@
+import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { SubHeader } from '@/components/ui/SubHeader'
 import { Button } from '@/components/ui/Button'
-import { CheckIcon, PinIcon, TruckIcon } from '@/components/icons'
+import { Barcode } from '@/components/ui/Barcode'
+import { BarcodeIcon, CheckIcon, DownloadIcon, PinIcon, TruckIcon } from '@/components/icons'
 import { ProductImage } from '@/components/atoms/Thumbnail'
 import { useOrders } from '@/context/OrdersContext'
 import { formatIDR } from '@/lib/format'
 import { cn } from '@/lib/cn'
 import { orderStatusMeta } from '@/features/orders/orderStatus'
+import { downloadOrderReceipt } from '@/lib/orderReceipt'
 
 /** Order detail with a step-by-step delivery tracking timeline. */
 export function OrderTrackingScreen() {
   const { orderId } = useParams()
   const { getOrder } = useOrders()
   const navigate = useNavigate()
+  const [showBarcode, setShowBarcode] = useState(false)
 
   const order = orderId ? getOrder(orderId) : undefined
   if (!order) return <Navigate to="/orders" replace />
@@ -23,7 +27,20 @@ export function OrderTrackingScreen() {
 
   return (
     <div className="flex h-full flex-col bg-surface-subtle">
-      <SubHeader title="Lacak Pesanan" onBack={() => navigate('/orders')} />
+      <SubHeader
+        title="Lacak Pesanan"
+        onBack={() => navigate('/orders')}
+        action={
+          <button
+            type="button"
+            aria-label="Unduh pesanan"
+            onClick={() => downloadOrderReceipt(order)}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-surface-sunken"
+          >
+            <DownloadIcon className="h-5 w-5" />
+          </button>
+        }
+      />
 
       <main className="no-scrollbar flex-1 space-y-4 overflow-y-auto p-4 pb-4">
         {/* Status banner */}
@@ -71,12 +88,38 @@ export function OrderTrackingScreen() {
                       <span className={cn('w-0.5 flex-1', step.done ? 'bg-brand-500' : 'bg-slate-200')} />
                     )}
                   </div>
-                  <div className={cn('pb-6', last && 'pb-0')}>
+                  <div className={cn('flex-1', last ? 'pb-0' : 'pb-6')}>
                     <p className={cn('text-sm font-semibold', step.done ? 'text-ink' : 'text-ink-muted')}>
                       {step.label}
                     </p>
                     <p className="text-xs text-ink-muted">{step.description}</p>
                     <p className="mt-0.5 text-xs text-ink-muted">{step.time}</p>
+
+                    {step.key === 'validated' && order.status !== 'awaiting_payment' && (
+                      <div className="mt-2">
+                        {showBarcode ? (
+                          <div className="rounded-xl border border-brand-100 bg-brand-50/60 p-3">
+                            <Barcode value={order.id} />
+                            <button
+                              type="button"
+                              onClick={() => setShowBarcode(false)}
+                              className="mt-2 w-full text-center text-xs font-semibold text-ink-muted"
+                            >
+                              Sembunyikan
+                            </button>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            icon={<BarcodeIcon className="h-4 w-4" />}
+                            onClick={() => setShowBarcode(true)}
+                            className="px-4 py-2 text-xs"
+                          >
+                            Tampilkan Barcode
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </li>
               )
@@ -133,6 +176,15 @@ export function OrderTrackingScreen() {
             </div>
           </div>
         </section>
+
+        <Button
+          fullWidth
+          variant="secondary"
+          icon={<DownloadIcon className="h-5 w-5" />}
+          onClick={() => downloadOrderReceipt(order)}
+        >
+          Unduh Pesanan (PDF)
+        </Button>
       </main>
     </div>
   )

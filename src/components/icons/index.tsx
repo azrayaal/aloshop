@@ -163,6 +163,20 @@ export const QrIcon = (p: IconProps) => (
   </svg>
 )
 
+export const BarcodeIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M4 6v12M8 6v12M12 6v12M16 6v12M20 6v12" />
+  </svg>
+)
+
+export const DownloadIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M12 3v12" />
+    <path d="m7 11 5 4 5-4" />
+    <path d="M5 21h14" />
+  </svg>
+)
+
 export const UserIcon = (p: IconProps) => (
   <svg {...base(p)}>
     <circle cx="12" cy="8" r="4" />

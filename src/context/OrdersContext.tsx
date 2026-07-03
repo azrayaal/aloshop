@@ -30,15 +30,33 @@ function buildTracking(createdAt: Date, paid: boolean): TrackingStep[] {
     { key: 'created', label: 'Pesanan Dibuat', description: 'Menunggu pembayaran', time: time(createdAt), done: true },
     { key: 'paid', label: 'Pembayaran Diterima', description: 'Pembayaran berhasil dikonfirmasi', time: paid ? later(2) : '—', done: paid },
     { key: 'processing', label: 'Diproses Toko', description: 'Pesanan sedang disiapkan', time: paid ? later(8) : '—', done: paid },
+    { key: 'validated', label: 'Validasi Pesanan', description: 'Tunjukkan barcode ke kurir/kasir untuk verifikasi', time: '—', done: false },
     { key: 'shipped', label: 'Dalam Pengiriman', description: 'Kurir sedang menuju alamat Anda', time: '—', done: false },
     { key: 'delivered', label: 'Pesanan Diterima', description: 'Pesanan sampai tujuan', time: '—', done: false },
   ]
 }
 
+/** Insert the "Validasi Pesanan" step into orders persisted before it existed. */
+function normalizeTracking(order: Order): Order {
+  if (order.tracking.some((s) => s.key === 'validated')) return order
+  const idx = order.tracking.findIndex((s) => s.key === 'processing')
+  if (idx === -1) return order
+  const validated: TrackingStep = {
+    key: 'validated',
+    label: 'Validasi Pesanan',
+    description: 'Tunjukkan barcode ke kurir/kasir untuk verifikasi',
+    time: '—',
+    done: false,
+  }
+  const tracking = [...order.tracking]
+  tracking.splice(idx + 1, 0, validated)
+  return { ...order, tracking }
+}
+
 function readStored(): Order[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as Order[]) : []
+    return raw ? (JSON.parse(raw) as Order[]).map(normalizeTracking) : []
   } catch {
     return []
   }
